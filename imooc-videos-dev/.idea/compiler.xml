@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="imooc-videos-dev-common" />
+        <module name="imooc-videos-dev-mapper" />
+        <module name="imooc-videos-dev-mini-api" />
+        <module name="imooc-videos-dev-pojo" />
+        <module name="imooc-videos-dev-service" />
+        <module name="mybatis-generatorConfig" />
+      </profile>
+    </annotationProcessing>
+  </component>
+  <component name="JavacSettings">
+    <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="imooc-videos-dev-common" options="" />
+      <module name="imooc-videos-dev-mapper" options="" />
+      <module name="imooc-videos-dev-mini-api" options="" />
+      <module name="imooc-videos-dev-pojo" options="" />
+      <module name="imooc-videos-dev-service" options="" />
+    </option>
+  </component>
+</project>
