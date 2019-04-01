@@ -1,6 +1,7 @@
 package com.imooc.service;
 
 import com.imooc.pojo.Videos;
+import com.imooc.utils.PagedResult;
 
 public interface VideoService {
 
@@ -11,5 +12,7 @@ public interface VideoService {
     String saveVideo(Videos video);
 
     void updateVideo(String videoId,String converPath);
+
+    PagedResult getAllVideos(Integer page,Integer pageSize);
 
 }

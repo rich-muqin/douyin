@@ -19,4 +19,6 @@ public class BaseController {
     public String ffmpegEXE;
 
     public static final String USER_REDIS_SESSION = "user-redis-session";
+
+    public static final Integer PAGE_SIZE = 5;
 }

@@ -5,8 +5,10 @@ import com.imooc.pojo.Bgm;
 import com.imooc.pojo.Videos;
 import com.imooc.service.BgmService;
 import com.imooc.service.VideoService;
+import com.imooc.utils.FetchVideoCover;
 import com.imooc.utils.IMoocJSONResult;
 import com.imooc.utils.MergeVideoMp3;
+import com.imooc.utils.PagedResult;
 import io.swagger.annotations.*;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -53,6 +55,8 @@ public class VideoController extends BaseController{
 
         //保存到数据库中的相对路径
         String uploadPathDB = userId + "/video";
+        String coverPath = userId + "/video";
+
         FileOutputStream fileOutputStream = null;
         InputStream inputStream = null;
 
@@ -60,12 +64,14 @@ public class VideoController extends BaseController{
         try {
             if (file != null ){
                 String fileName = file.getOriginalFilename();
+                String fileNamePrefix = fileName.split("\\.")[0];
+
                 if(StringUtils.isNoneBlank(fileName)){
                     // 文件上传的最终保存路径
                     finalVideoPath = fileSpace + uploadPathDB + "/" + fileName;
                     // 设置数据库保存的路径
                     uploadPathDB += ("/" + fileName);
-
+                    coverPath = coverPath + "/" +fileNamePrefix + ".jpg";
                     File outFile = new File(finalVideoPath);
                     if (outFile.getParentFile() != null || !outFile.getParentFile().isDirectory()) {
                         // 创建父文件夹
@@ -104,6 +110,11 @@ public class VideoController extends BaseController{
         System.out.println("uploadPathDB:"+uploadPathDB);
         System.out.println("finalVideoPath:"+finalVideoPath);
 
+        //对视频进行截图
+        FetchVideoCover videoInfo = new FetchVideoCover(ffmpegEXE);
+        videoInfo.getCover(finalVideoPath,fileSpace+coverPath);
+
+
         //保存视频信息
         Videos video = new Videos();
         video.setAudioId(bgmId);
@@ -115,6 +126,7 @@ public class VideoController extends BaseController{
         video.setVideoPath(uploadPathDB);
         video.setStatus(VideoStatusEnum.SUCCESS.value);
         video.setCreateTime(new Date());
+        video.setCoverPath(coverPath);
 
         String videoId = videoService.saveVideo(video);
         return IMoocJSONResult.ok(videoId);
@@ -176,5 +188,17 @@ public class VideoController extends BaseController{
         return IMoocJSONResult.ok();
     }
 
+
+
+    @ApiOperation(value = "查询视频", notes = "查询视频的接口")
+    @PostMapping(value = "/showAll")
+    public IMoocJSONResult showAll(Integer page ) throws Exception{
+
+        if (page == null){
+            page = 1;
+        }
+        PagedResult result = videoService.getAllVideos(page,PAGE_SIZE);
+        return  IMoocJSONResult.ok(result);
+    }
 
 }
