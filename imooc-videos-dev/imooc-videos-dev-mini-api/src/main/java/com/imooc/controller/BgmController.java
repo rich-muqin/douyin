@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @Api(value = "BGN的接口",tags = {"BGM的controller"})
 @RequestMapping("/bgm")
-public class BgmController {
+public class BgmController extends BaseController{
 
     @Autowired
     private BgmService bgmService;
