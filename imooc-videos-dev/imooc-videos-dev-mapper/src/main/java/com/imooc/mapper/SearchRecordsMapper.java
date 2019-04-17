@@ -7,5 +7,5 @@ import java.util.List;
 
 public interface SearchRecordsMapper extends MyMapper<SearchRecords> {
 	
-	public List<String> getHotwords();
+	List<String> getHotwords();
 }

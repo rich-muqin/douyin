@@ -3,6 +3,8 @@ package com.imooc.service;
 import com.imooc.pojo.Videos;
 import com.imooc.utils.PagedResult;
 
+import java.util.List;
+
 public interface VideoService {
 
     /**
@@ -13,6 +15,12 @@ public interface VideoService {
 
     void updateVideo(String videoId,String converPath);
 
-    PagedResult getAllVideos(Integer page,Integer pageSize);
+    PagedResult getAllVideos(Videos video,Integer isSaveRecord,Integer page,Integer pageSize);
+
+    /**
+     * 热搜
+     * @return
+     */
+    List<String> getHotwords();
 
 }

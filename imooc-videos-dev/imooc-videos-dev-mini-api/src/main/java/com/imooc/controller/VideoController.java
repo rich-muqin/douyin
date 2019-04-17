@@ -14,6 +14,7 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
@@ -189,16 +190,39 @@ public class VideoController extends BaseController{
     }
 
 
-
+    /**
+     *
+     * @param video
+     * @param isSaveRecord    1 -需要保存  0 - 不需要保存 ，或者为空的时候
+     * @param page
+     * @return
+     * @throws Exception
+     */
     @ApiOperation(value = "查询视频", notes = "查询视频的接口")
     @PostMapping(value = "/showAll")
-    public IMoocJSONResult showAll(Integer page ) throws Exception{
+    public IMoocJSONResult showAll(@RequestBody Videos video, Integer isSaveRecord,
+                                   Integer page, Integer pageSize) throws Exception {
 
-        if (page == null){
+        if (page == null) {
             page = 1;
         }
-        PagedResult result = videoService.getAllVideos(page,PAGE_SIZE);
-        return  IMoocJSONResult.ok(result);
+
+        if (pageSize == null) {
+            pageSize = PAGE_SIZE;
+        }
+
+        PagedResult result = videoService.getAllVideos(video, isSaveRecord, page, pageSize);
+        return IMoocJSONResult.ok(result);
     }
+
+
+    @ApiOperation(value = "查询热搜", notes = "查询热搜的接口")
+    @PostMapping(value = "/hot")
+    public IMoocJSONResult hot() throws Exception{
+        return  IMoocJSONResult.ok(videoService.getHotwords());
+    }
+
+
+
 
 }
