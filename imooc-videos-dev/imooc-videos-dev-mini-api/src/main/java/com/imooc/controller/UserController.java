@@ -12,6 +12,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
@@ -23,6 +24,7 @@ import java.io.InputStream;
 
 @Api(value = "用户相关业务的接口",tags = {"用户相关业务的controller"})
 @RestController
+@RequestMapping("/user")
 public class UserController extends BaseController{
 
     @Autowired
@@ -92,6 +94,9 @@ public class UserController extends BaseController{
         }
         Users info = userService.queryUserInfo(userId);
 
+        if (info == null){
+            return IMoocJSONResult.errorMsg("查询不到用户");
+        }
         UsersVO usersVO = new UsersVO();
         BeanUtils.copyProperties(info,usersVO);
         return IMoocJSONResult.ok(usersVO);
