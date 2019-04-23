@@ -222,7 +222,19 @@ public class VideoController extends BaseController{
         return  IMoocJSONResult.ok(videoService.getHotwords());
     }
 
+    @ApiOperation(value = "用户喜欢", notes = "用户喜欢的接口")
+    @PostMapping(value = "/userLike")
+    public IMoocJSONResult userLike(String userId, String videoId, String videoCreateId) throws Exception{
+        videoService.userLikeVideo( userId,  videoId,  videoCreateId);
+        return  IMoocJSONResult.ok();
+    }
 
+    @ApiOperation(value = "查询热搜", notes = "查询热搜的接口")
+    @PostMapping(value = "/userUnLike")
+    public IMoocJSONResult userUnLike(String userId, String videoId, String videoCreateId) throws Exception{
+        videoService.userUnLikeVideo( userId,  videoId,  videoCreateId);
+        return  IMoocJSONResult.ok();
+    }
 
 
 }

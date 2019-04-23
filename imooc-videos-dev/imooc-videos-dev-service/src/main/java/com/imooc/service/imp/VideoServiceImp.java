@@ -2,10 +2,10 @@ package com.imooc.service.imp;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import com.imooc.mapper.SearchRecordsMapper;
-import com.imooc.mapper.VideosMapper;
-import com.imooc.mapper.VideosMapperCustom;
+import com.imooc.mapper.*;
 import com.imooc.pojo.SearchRecords;
+import com.imooc.pojo.Users;
+import com.imooc.pojo.UsersLikeVideos;
 import com.imooc.pojo.Videos;
 import com.imooc.pojo.vo.VideosVO;
 import com.imooc.service.VideoService;
@@ -15,6 +15,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import tk.mybatis.mapper.entity.Example;
+import tk.mybatis.mapper.entity.Example.Criteria;
 
 import java.util.List;
 
@@ -26,6 +28,7 @@ public class VideoServiceImp implements VideoService {
     @Autowired
     private VideosMapper videosMapper;
 
+
     @Autowired
     private Sid sid;
 
@@ -34,6 +37,12 @@ public class VideoServiceImp implements VideoService {
 
     @Autowired
     private SearchRecordsMapper searchRecordsMapper;
+
+    @Autowired
+    private UsersLikeVideosMapper usersLikeVideosMapper;
+
+    @Autowired
+    private UsersMapper usersMapper;
 
     @Override
     @Transactional(propagation = Propagation.REQUIRED)
@@ -86,5 +95,32 @@ public class VideoServiceImp implements VideoService {
         videos.setId(videoId);
         videos.setCoverPath(converPath);
         videosMapper.updateByPrimaryKeySelective(videos);
+    }
+
+
+    @Override
+    @Transactional(propagation = Propagation.REQUIRED)
+    public void userLikeVideo(String userId, String videoId, String videoCreateId) {
+        String likeId = sid.nextShort();
+        UsersLikeVideos ulv  = new UsersLikeVideos();
+        ulv.setId(likeId);
+        ulv.setUserId(userId);
+        ulv.setVideoId(videoId);
+        usersLikeVideosMapper.insert(ulv);
+        videosMapperCustom.addVideoLikeCount(videoId);
+        usersMapper.addReceiveLikeCount(videoCreateId);
+    }
+
+    @Override
+    @Transactional(propagation = Propagation.REQUIRED)
+    public void userUnLikeVideo(String userId, String videoId, String videoCreateId) {
+
+        Example userExample = new Example(UsersLikeVideos.class);
+        Criteria criteria = userExample.createCriteria();
+        criteria.andEqualTo("userId",userId);
+        criteria.andEqualTo("videoId",videoId);
+        usersLikeVideosMapper.deleteByExample(userExample);
+        videosMapperCustom.reduceVideoLikeCount(videoId);
+        usersMapper.reduceReceiveLikeCount(videoCreateId);
     }
 }

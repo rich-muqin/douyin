@@ -23,4 +23,20 @@ public interface VideoService {
      */
     List<String> getHotwords();
 
+    /**
+     * 用户喜欢
+     * @param userId
+     * @param videoId
+     * @param videoCreateId
+     */
+    void  userLikeVideo(String userId,String videoId,String videoCreateId);
+
+    /**
+     * 用户不喜欢
+     * @param userId
+     * @param videoId
+     * @param videoCreateId
+     */
+    void  userUnLikeVideo(String userId,String videoId,String videoCreateId);
+
 }
